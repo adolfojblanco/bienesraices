@@ -1,0 +1,11 @@
+{
+  "name": "bienesraices",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "adolfob",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  }
+}
