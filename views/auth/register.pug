@@ -1,3 +1,31 @@
-div 
-  h2#id Resgistro de usuarios
-  p Inicia Sesion
+extends ../layout/index
+block contenido
+  div
+    h1(class="text-4xl my-10 font-extrabold text-center") Bienes
+      span(class="font-normal") Raices
+    h2(class="text-center text-2xl font-extrabold") #{title}
+
+    div(class="mt-8 mx-auto max-w-md")
+      div(class="bg-white py-8 px-4 shadow")
+        form(class="space-y-5")
+          div
+            label(class="block text-sm uppercase text-gray-500 mb-2 font-bold" for="name") Tu Nombre
+            input(id="name" type="text" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Tu Nombre")
+
+          div
+            label(class="block text-sm uppercase text-gray-500 mb-2 font-bold" for="email") Tu Email
+            input(id="email" type="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Tu Email")
+
+          div
+            label(class="block text-sm uppercase text-gray-500 mb-2 font-bold" for="password") Tu Contraseña
+            input(id="password" type="password" name="password" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Tu Contraseña")
+
+          div
+            label(class="block text-sm uppercase text-gray-500 mb-2 font-bold" for="password2") Repite la contraseña
+            input(id="password" type="password" name="password2" class="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400" placeholder="Tu Contraseña")
+          
+          div(class="flex items-center justify-between")
+            a(href="/usuario/login" class="text-gray-500 text-xs ") ¿Ya tienes cuenta? Incia Sesión
+            a(href="/usuario/restablecer" class="text-gray-500 text-xs ") Olvide Mi Contraseña
+          
+          input(type="submit" value="Crear Cuenta" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 py-2 cursor-pointer rounded-md")

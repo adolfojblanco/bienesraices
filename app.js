@@ -2,6 +2,9 @@ import express from 'express';
 import router from './routes/index.js';
 const app = express();
 
+//* Static Files
+app.use(express.static('public'));
+
 //* Template Engine
 app.set('view engine', 'pug');
 app.set('views', './views');
