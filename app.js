@@ -3,9 +3,13 @@ import db from './config/db.js';
 import router from './routes/index.js';
 const app = express();
 
+//* Habilitar formularios
+app.use(express.urlencoded({ extended: true }));
+
 //* Conexion a la base de datos
 try {
   await db.authenticate();
+  db.sync();
   console.log('Conexion correcta a la Base de Datos');
 } catch (error) {
   console.log(process.env);
