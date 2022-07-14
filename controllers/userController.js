@@ -92,8 +92,13 @@ export const register = async (req, res) => {
 /**
  * Funcion que compruba una cuenta
  */
-export const confirmarCuenta = (req, res) => {
+export const confirmarCuenta = async (req, res) => {
   const { token } = req.params;
+  //* Verificar si el token es valido
+  const user = await User.findOne({ where: { token } });
+
+  console.log(user)
+
 
 };
 
