@@ -1,4 +1,5 @@
 import { check, validationResult } from 'express-validator';
+import { emailRegistro } from '../helpers/emails.js';
 import { genId } from '../helpers/tokens.js';
 import { User } from '../models/User.js';
 
@@ -22,7 +23,6 @@ export const formRegister = (req, res) => {
  * Registro de nuevo usuario
  */
 export const register = async (req, res) => {
-
   try {
     //* Validación del formulario
     await check('name').notEmpty().withMessage('El nombre es requerido').run(req);
@@ -32,7 +32,7 @@ export const register = async (req, res) => {
       .isLength({ min: 6 })
       .withMessage('La contraseña debe tener minimo 6 caracteres')
       .run(req);
-      
+
     //TODO: Password check
     // await check('password_repeat')
     //   .equals('password')
@@ -71,11 +71,20 @@ export const register = async (req, res) => {
       });
     }
 
-    await User.create({ name, email, password, token: genId() });
+    //* Guardar el usuario en la bd.
+    const usuario = await User.create({ name, email, password, token: genId() });
     res.render('templates/message', {
       title: 'Cuenta Creada Correctamente',
-      message: 'Hemos enviado un email de confirmación'
-    })
+      message: 'Hemos enviado un email de confirmación',
+    });
+
+    //* Envio de email al usuario
+    emailRegistro({
+      nombre: usuario.name,
+      email: usuario.email,
+      token: usuario.token,
+    });
+
 
   } catch (error) {
     console.log(error);
