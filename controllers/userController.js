@@ -84,13 +84,22 @@ export const register = async (req, res) => {
       email: usuario.email,
       token: usuario.token,
     });
-
-
   } catch (error) {
     console.log(error);
   }
 };
 
+/**
+ * Funcion que compruba una cuenta
+ */
+export const confirmarCuenta = (req, res) => {
+  const { token } = req.params;
+
+};
+
+/**
+ * Funcion para restablecer la contraseña
+ */
 export const restorePassword = (req, res) => {
   res.render('auth/restore-password.pug', {
     title: 'Recupera tu acceso',
