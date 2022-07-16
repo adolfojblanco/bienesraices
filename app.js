@@ -1,10 +1,14 @@
 import express from 'express';
+import csrf from 'csurf';
+import cookieParser from 'cookie-parser';
 import db from './config/db.js';
 import router from './routes/index.js';
 const app = express();
 
 //* Habilitar formularios
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
 //* Conexion a la base de datos
 try {
