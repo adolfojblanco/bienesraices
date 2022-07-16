@@ -10,11 +10,12 @@ import {
   register,
   resetPasword,
   restorePassword,
+  userLogin,
 } from '../controllers/userController.js';
 
 //* Auth Routes
 router.get('/login', login); // Mostrar el formulario
-router.post('/login', login); // Inicio de sesion de usuario
+router.post('/login', userLogin); // Inicio de sesion de usuario
 
 
 router.get('/registrar', formRegister);

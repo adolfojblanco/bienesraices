@@ -1,14 +1,78 @@
 import { check, validationResult } from 'express-validator';
-import { emailRegistro, emailResetPassword } from '../helpers/emails.js';
 import bcript from 'bcrypt';
+
+import { emailRegistro, emailResetPassword } from '../helpers/emails.js';
 import { genId } from '../helpers/tokens.js';
 import { User } from '../models/User.js';
+import { generatedToken } from '../helpers/tokens.js';
 
+/**
+ * Muestra el formulario de login
+ */
 export const login = (req, res) => {
   res.render('auth/login.pug', {
     autenticated: false,
+    csrfToken: req.csrfToken(),
     title: 'Inciar Sesión',
   });
+};
+
+/**
+ * Inicio de sesion de usuario
+ * /usuario/auth/login
+ */
+export const userLogin = async (req, res) => {
+  await check('email').notEmpty().withMessage('El email es requerido').run(req);
+  await check('password').notEmpty().withMessage('La contraseña es requerida').run(req);
+
+  let resultado = validationResult(req);
+
+  if (!resultado.isEmpty()) {
+    res.render('auth/login', {
+      title: 'Inciar Sesión',
+      errores: resultado.array(),
+      csrfToken: req.csrfToken(),
+    });
+  }
+
+  //* Verificar si existe el usuario.
+  const { email, password } = req.body;
+  const usuario = await User.findOne({ where: { email } });
+
+  if (!usuario) {
+    res.render('auth/login', {
+      title: 'Inciar Sesión',
+      errores: [{ msg: 'El usuario no existe' }],
+      csrfToken: req.csrfToken(),
+    });
+  }
+
+  //* Verificar si la cuenta esta confirmada.
+  if (!usuario.confirm) {
+    res.render('auth/login', {
+      title: 'Inciar Sesión',
+      errores: [{ msg: 'Debes confirmar tu cuenta' }],
+      csrfToken: req.csrfToken(),
+    });
+  }
+
+  //* Revisar la contraseña
+  if (!usuario.verificarPassword(password)) {
+    res.render('auth/login', {
+      title: 'Inciar Sesión',
+      errores: [{ msg: 'Datos incorrectos, vuelve a intentarlo' }],
+      csrfToken: req.csrfToken(),
+    });
+  }
+
+  //* Autenticar usuario
+  const token = generatedToken(usuario);
+
+  // Almacenar token en cookie
+  return res.cookie('_token', token, {
+    httpOnly: true,
+    //secure: true
+  }).redirect('/mis-propiedades')
 };
 
 /**
@@ -197,7 +261,7 @@ export const comprobarToken = async (req, res) => {
 
 /**
  *  Cambiar contraseña
- * /usuario/olvide-password/:token 
+ * /usuario/olvide-password/:token
  */
 export const nuevoPassword = async (req, res) => {
   const { token } = req.params;
