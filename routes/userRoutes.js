@@ -13,7 +13,10 @@ import {
 } from '../controllers/userController.js';
 
 //* Auth Routes
-router.get('/login', login);
+router.get('/login', login); // Mostrar el formulario
+router.post('/login', login); // Inicio de sesion de usuario
+
+
 router.get('/registrar', formRegister);
 router.post('/registrar', register);
 router.get('/confirmar/:token', confirmarCuenta);
