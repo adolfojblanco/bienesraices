@@ -1,7 +1,7 @@
 (function () {
   const lat = 43.3695183;
   const lng = -8.4180963;
-  const mapa = L.map('mapa').setView([lat, lng], 15);
+  const mapa = L.map('mapa').setView([lat, lng], 18);
   let marker; // pin
 
   //* Provider y Geocode
@@ -27,10 +27,16 @@
     //* Obtener info de la calle al soltar el pin
     geocodeService
       .reverse()
-      .latlng(posicion, 16)
+      .latlng(posicion, 18)
       .run(function (error, resultado) {
         console.log(resultado);
         marker.bindPopup(resultado.address.ShortLabel);
+
+        //* Llenar los campos
+        document.querySelector('.calle').textContent = resultado.address?.ShortLabel ?? '';
+        document.querySelector('#calle').value = resultado.address?.ShortLabel ?? '';
+        document.querySelector('#lat').value = resultado.latlng?.lat ?? '';
+        document.querySelector('#lng').value = resultado.latlng?.lng ?? '';
       });
   });
 })();
