@@ -10,7 +10,9 @@
     "start": "node app.js",
     "css": "postcss public/css/tailwind.css -o public/css/app.css --watch",
     "js": "webpack --watch",
-    "front": "concurrently \"yarn css\" \"yarn js\"  "
+    "front": "concurrently \"yarn css\" \"yarn js\" ",
+    "seed:import": "node ./seed/seeders.js -i",
+    "seed:delete": "node ./seed/seeders.js -e"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
