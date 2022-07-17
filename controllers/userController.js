@@ -69,10 +69,12 @@ export const userLogin = async (req, res) => {
   const token = generatedToken(usuario);
 
   // Almacenar token en cookie
-  return res.cookie('_token', token, {
-    httpOnly: true,
-    //secure: true
-  }).redirect('/mis-propiedades')
+  return res
+    .cookie('_token', token, {
+      httpOnly: true,
+      //secure: true
+    })
+    .redirect('/propiedades/mis-propiedades');
 };
 
 /**
