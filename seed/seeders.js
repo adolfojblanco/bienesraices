@@ -1,5 +1,5 @@
 import db from '../config/db.js';
-import { Category } from '../models/Category.js';
+import { Category } from '../models/index.js';
 import categories from './categories.js';
 
 const importData = async () => {
@@ -22,10 +22,10 @@ const importData = async () => {
 
 const destroyData = async () => {
   try {
-    await Promise.all([
-      Category.destroy({ where: {}, truncate: true }), // Eliminamos las categorias
-    ]);
-    // await db.sync({ force: true }); //Elimina los datos de todas las tablas
+    // await Promise.all([
+    //   Category.destroy({ where: {}, truncate: true }), // Eliminamos las categorias
+    // ]);
+    await db.sync({ force: true }); //Elimina los datos de todas las tablas
     console.log('Datos eliminados correctamente');
     process.exit(); // Si todo es correcto
   } catch (error) {
