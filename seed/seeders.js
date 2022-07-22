@@ -1,6 +1,7 @@
 import db from '../config/db.js';
-import { Category } from '../models/index.js';
+import { Category, User } from '../models/index.js';
 import categories from './categories.js';
+import users from './users.js';
 
 const importData = async () => {
   try {
@@ -11,7 +12,8 @@ const importData = async () => {
     await db.sync();
 
     // Insertar datos
-    await Category.bulkCreate(categories);
+    await Promise.all([Category.bulkCreate(categories), User.bulkCreate(users)]);
+
     console.log('Datos importados correctamente');
     process.exit(); // Si todo es correcto
   } catch (error) {

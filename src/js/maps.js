@@ -1,6 +1,6 @@
 (function () {
-  const lat = 43.3695183;
-  const lng = -8.4180963;
+  const lat = document.querySelector('#lat').value || 43.3695183;
+  const lng = document.querySelector('#lng').value || -8.4180963;
   const mapa = L.map('mapa').setView([lat, lng], 18);
   let marker; // pin
 
@@ -33,8 +33,8 @@
         marker.bindPopup(resultado.address.ShortLabel);
 
         //* Llenar los campos
-        document.querySelector('.calle').textContent = resultado.address?.ShortLabel ?? '';
-        document.querySelector('#calle').value = resultado.address?.ShortLabel ?? '';
+        document.querySelector('.street').textContent = resultado.address?.ShortLabel ?? '';
+        document.querySelector('#street').value = resultado.address?.ShortLabel ?? '';
         document.querySelector('#lat').value = resultado.latlng?.lat ?? '';
         document.querySelector('#lng').value = resultado.latlng?.lng ?? '';
       });

@@ -1,9 +1,9 @@
-import { Category } from '../models/Category.js';
+import { Category, Property } from '../models/index.js';
 import { validationResult } from 'express-validator';
+
 export const admin = (req, res) => {
   res.render('propiedades/admin', {
     title: 'Mis propiedades',
-    barra: true,
   });
 };
 
@@ -16,7 +16,6 @@ export const crear = async (req, res) => {
   res.render('propiedades/nueva-propiedad', {
     title: 'Nueva Propiedad',
     csrfToken: req.csrfToken(),
-    barra: true,
     data: {},
     categories,
   });
@@ -27,21 +26,62 @@ export const guardar = async (req, res) => {
 
   //* Validación
   let result = validationResult(req);
+
   if (!result.isEmpty()) {
     res.render('propiedades/nueva-propiedad', {
       title: 'Nueva Propiedad',
       csrfToken: req.csrfToken(),
       errors: result.array(),
-      barra: true,
       categories,
       data: req.body,
     });
   }
 
-  res.render('propiedades/nueva-propiedad', {
-    title: 'Nueva Propiedad',
-    csrfToken: req.csrfToken(),
-    barra: true,
-    categories,
+  const {
+    title,
+    description,
+    category: categoryId,
+    price,
+    rooms,
+    parking,
+    baths,
+    street,
+    lat,
+    lng,
+  } = req.body;
+
+  const { id: userId } = req.user;
+
+  //* Crear un registro
+  try {
+    const newProperty = await Property.create({
+      title,
+      description,
+      categoryId,
+      price,
+      rooms,
+      parking,
+      baths,
+      street,
+      lat,
+      lng,
+      userId,
+      image: '',
+    });
+
+    const { id } = newProperty;
+    res.redirect(`/propiedades/agregar-imagen/${id}`);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * Agregar Imagen
+ * /propiedades/agregar-imagen
+ */
+export const addImage = async (req, res) => {
+  res.render('propiedades/add-image', {
+    title: 'Agregar Imagen',
   });
 };

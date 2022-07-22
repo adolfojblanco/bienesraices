@@ -41,10 +41,17 @@ export const User = db.define(
         user.password = await bcrypt.hash(user.password, salt);
       },
     },
+    scopes: {
+      eliminarPassword: {
+        attributes: {
+          exclude: ['password', 'token', 'confirm', 'createdAt', 'updatedAt'],
+        },
+      },
+    },
   }
 );
 
 //* Metodo personalizado
-User.prototype.verificarPassword = function(password) {
-  return bcrypt.compareSync(password, this.password)
-}
+User.prototype.verificarPassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};

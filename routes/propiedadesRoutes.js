@@ -2,12 +2,16 @@ import express from 'express';
 const router = express.Router();
 import { body } from 'express-validator';
 
-import { admin, crear, guardar } from '../controllers/propiedadController.js';
+import { addImage, admin, crear, guardar } from '../controllers/propiedadController.js';
+import { auth } from '../middleware/auth.js';
 
-router.get('/mis-propiedades', admin);
-router.get('/nueva-propiedad', crear);
+router.get('/mis-propiedades', auth, admin);
+
+router.get('/nueva-propiedad', auth, crear);
+
 router.post(
   '/nueva-propiedad',
+  auth,
   body('title').notEmpty().withMessage('El titulo del anuncio es requerido'),
   body('description')
     .notEmpty()
@@ -20,5 +24,7 @@ router.post(
   body('lat').notEmpty().withMessage('Ubica la propiedad en el mapa'),
   guardar
 );
+
+router.get('/agregar-imagen/:id', addImage);
 
 export default router;

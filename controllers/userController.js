@@ -13,6 +13,7 @@ export const login = (req, res) => {
   res.render('auth/login.pug', {
     autenticated: false,
     csrfToken: req.csrfToken(),
+    errores: [],
     title: 'Inciar Sesión',
   });
 };
@@ -29,7 +30,7 @@ export const userLogin = async (req, res) => {
 
   if (!resultado.isEmpty()) {
     res.render('auth/login', {
-      title: 'Inciar Sesión',
+      title: 'aqui - Inciar Sesión',
       errores: resultado.array(),
       csrfToken: req.csrfToken(),
     });
@@ -37,11 +38,12 @@ export const userLogin = async (req, res) => {
 
   //* Verificar si existe el usuario.
   const { email, password } = req.body;
+
   const usuario = await User.findOne({ where: { email } });
 
   if (!usuario) {
-    res.render('auth/login', {
-      title: 'Inciar Sesión',
+    return res.render('auth/login', {
+      title: '0 -Inciar Sesión',
       errores: [{ msg: 'El usuario no existe' }],
       csrfToken: req.csrfToken(),
     });
@@ -49,8 +51,8 @@ export const userLogin = async (req, res) => {
 
   //* Verificar si la cuenta esta confirmada.
   if (!usuario.confirm) {
-    res.render('auth/login', {
-      title: 'Inciar Sesión',
+    return res.render('auth/login', {
+      title: '1- Inciar Sesión',
       errores: [{ msg: 'Debes confirmar tu cuenta' }],
       csrfToken: req.csrfToken(),
     });
@@ -58,23 +60,22 @@ export const userLogin = async (req, res) => {
 
   //* Revisar la contraseña
   if (!usuario.verificarPassword(password)) {
-    res.render('auth/login', {
-      title: 'Inciar Sesión',
-      errores: [{ msg: 'Datos incorrectos, vuelve a intentarlo' }],
+    return res.render('auth/login', {
+      title: '2 - Inciar Sesión',
+      errores: [{ msg: 'Contraseña incorrecta' }],
       csrfToken: req.csrfToken(),
     });
   }
 
   //* Autenticar usuario
-  const token = generatedToken(usuario);
+  const token = await generatedToken(usuario);
 
   // Almacenar token en cookie
-  return res
-    .cookie('_token', token, {
-      httpOnly: true,
-      //secure: true
-    })
-    .redirect('/propiedades/mis-propiedades');
+  res.cookie('_token', token, {
+    httpOnly: true,
+  });
+
+  return res.redirect('/propiedades/mis-propiedades');
 };
 
 /**
