@@ -45,4 +45,8 @@ export const Property = db.define('propierties', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  published: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });

@@ -81,7 +81,28 @@ export const guardar = async (req, res) => {
  * /propiedades/agregar-imagen
  */
 export const addImage = async (req, res) => {
+  const { id } = req.params;
+
+  //* Validar que la propiedad exista
+  const property = await Property.findByPk(id);
+
+  if (!property) {
+    return res.redirect('/propiedades/mis-propiedades');
+  }
+
+  //* Validar que la propiedad no este publicada
+  if (property.published) {
+    return res.redirect('/propiedades/mis-propiedades');
+  }
+
+  //* Validar que la propiedad sea de quien visite la propiedad
+  if (req.user.id.toString() !== property.userId.toString()) {
+    return res.redirect('/propiedades/mis-propiedades');
+  }
+
   res.render('propiedades/add-image', {
-    title: 'Agregar Imagen',
+    title: `Agregar Imagen: ${property.title}`,
+    csrfToken: req.csrfToken(),
+    property,
   });
 };

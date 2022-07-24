@@ -25,6 +25,7 @@ router.post(
   guardar
 );
 
-router.get('/agregar-imagen/:id', addImage);
+router.get('/agregar-imagen/:id', auth, addImage);
+router.post('/agregar-imagen/:id', auth, addImage);
 
 export default router;
