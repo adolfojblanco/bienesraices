@@ -1,9 +1,17 @@
 import { Category, Property } from '../models/index.js';
 import { validationResult } from 'express-validator';
 
-export const admin = (req, res) => {
+export const admin = async (req, res) => {
+  const { id } = req.user;
+
+  const properties = await Property.findAll({
+    where: { userId: id },
+    include: [{ model: Category  }],
+  });
+
   res.render('propiedades/admin', {
     title: 'Mis propiedades',
+    properties,
   });
 };
 
@@ -105,4 +113,38 @@ export const addImage = async (req, res) => {
     csrfToken: req.csrfToken(),
     property,
   });
+};
+
+/**
+ * Guardar imagen en el servidor
+ */
+export const saveImage = async (req, res, next) => {
+  const { id } = req.params;
+
+  //* Validar que la propiedad exista
+  const property = await Property.findByPk(id);
+
+  if (!property) {
+    return res.redirect('/propiedades/mis-propiedades');
+  }
+
+  //* Validar que la propiedad no este publicada
+  if (property.published) {
+    return res.redirect('/propiedades/mis-propiedades');
+  }
+
+  //* Validar que la propiedad sea de quien visite la propiedad
+  if (req.user.id.toString() !== property.userId.toString()) {
+    return res.redirect('/propiedades/mis-propiedades');
+  }
+
+  try {
+    // Almacenar imagen y publicar
+    property.image = req.file.filename;
+    property.published = true;
+    await property.save();
+    next();
+  } catch (error) {
+    console.log(error);
+  }
 };

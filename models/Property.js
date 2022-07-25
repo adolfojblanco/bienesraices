@@ -29,6 +29,10 @@ export const Property = db.define('propierties', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  price: {
+    type: DataTypes.FLOAT,
+    allowNull: false
+  },
   street: {
     type: DataTypes.STRING(70),
     allowNull: false,

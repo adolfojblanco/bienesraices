@@ -9,11 +9,26 @@ Dropzone.options.image = {
   maxFilesize: 5,
   maxFiles: 1,
   parallelUploads: 1,
-  autoProcessQueue: true,
+  autoProcessQueue: false,
   addRemoveLinks: true,
   dictRemoveFile: 'Borrar Imagen',
   dictMaxFilesExceeded: 'El limite es una imagen',
   headers: {
     'CSRF-Token': token,
+  },
+  paramName: 'image',
+  init: function () {
+    const dropzone = this;
+    const btnPublicar = document.querySelector('#publicar');
+
+    btnPublicar.addEventListener('click', function () {
+      dropzone.processQueue();
+    });
+
+    dropzone.on('queuecomplete', function () {
+      if (dropzone.getActiveFiles().length == 0) {
+        window.location.href = '/propiedades/mis-propiedades';
+      }
+    });
   },
 };

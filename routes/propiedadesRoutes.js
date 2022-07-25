@@ -2,8 +2,10 @@ import express from 'express';
 const router = express.Router();
 import { body } from 'express-validator';
 
-import { addImage, admin, crear, guardar } from '../controllers/propiedadController.js';
+import { addImage, admin, crear, guardar, saveImage } from '../controllers/propiedadController.js';
+
 import { auth } from '../middleware/auth.js';
+import upload from '../middleware/uploadIMage.js';
 
 router.get('/mis-propiedades', auth, admin);
 
@@ -26,6 +28,6 @@ router.post(
 );
 
 router.get('/agregar-imagen/:id', auth, addImage);
-router.post('/agregar-imagen/:id', auth, addImage);
+router.post('/agregar-imagen/:id', auth, upload.single('image'), saveImage);
 
 export default router;

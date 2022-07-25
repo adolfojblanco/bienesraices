@@ -18,7 +18,7 @@ block contenido
       form(id="image" class="space-y-8 dropzone border-dashed border-2 w-full min:h-96 h-auto rounded flex-col justify-center items-center" method="POST" action=`/propiedades/agregar-imagen/${property.id}`)
         input(type="hidden" name="_csrf" value=csrfToken)
 
-      input(class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded text-white font-bold uppercase cursor-pointer mt-5" type="submit" value="Publicar Propiedad")
+      button(id="publicar" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded text-white font-bold uppercase cursor-pointer mt-5" type="button") Publicar Propiedad
 
 block scripts
   script(src="/js/addImage.js") 
